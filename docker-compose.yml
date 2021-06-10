@@ -1,0 +1,55 @@
+version: '3'
+services:
+  strapi-dev:
+    build: './strapi'
+    volumes:
+      - ./app:/srv/app
+    ports:
+      - '1339:1339'
+    depends_on:
+      - postgres-dev
+
+  postgres-dev:
+    image: postgres
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    volumes:
+      - ./db-dev:/var/lib/postgresql/data-dev
+
+  strapi-stg:
+    build: './strapi'
+    volumes:
+      - ./app/stg:/srv/app/stg
+    ports:
+      - '1338:1338'
+    depends_on:
+      - postgres-stg
+
+  postgres-stg:
+    image: postgres
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    volumes:
+      - ./db-stg:/var/lib/postgresql/data-stg
+
+  strapi:
+    build: './strapi'
+    volumes:
+      - ./app:/srv/app
+    ports:
+      - '1337:1337'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+    volumes:
+      - ./db:/var/lib/postgresql/data
